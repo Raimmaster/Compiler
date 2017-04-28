@@ -10,11 +10,8 @@ namespace Compiler
     {
         static void Main(string[] args)
         {
-            var inputString = new InputString(@"print IDTEST    +
-
-
-
-IDDUE   +  TRE");
+            var inputString = new InputString(@"print IDTEST = 5595 + ( TRE ) - QUATTRO * UNO//Hola
+IDDUE/ALGO;");
 
             var lexer = new Lexer(inputString);
 
