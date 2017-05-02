@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System;
 using System.Text;
-using System.Threading.Tasks;
+using CompilerLibrary;
 
 namespace Compiler
 {
@@ -11,8 +9,9 @@ namespace Compiler
         static void Main(string[] args)
         {
             var inputString = new InputString(@"print IDTEST = 5595 + ( TRE ) - QUATTRO * UNO//Hola
-IDDUE/ALGO;");
 
+
+IDDUE/ALGO;");
             var lexer = new Lexer(inputString);
 
             Token token = lexer.GetNextToken();
@@ -25,17 +24,6 @@ IDDUE/ALGO;");
 
             System.Console.Out.WriteLine(token);
             
-            //Symbol currentSymbol = inputString.GetNextSymbol();
-
-        
-            /*while (currentSymbol.character != '\0')
-            {
-                Console.WriteLine("Row: " + currentSymbol.rowCount +
-                    " Column: " + currentSymbol.colCount + 
-                    " Char: " + currentSymbol.character);
-                currentSymbol = inputString.GetNextSymbol();
-            }*/
-
             System.Console.ReadKey();
         }
     }

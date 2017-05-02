@@ -1,4 +1,4 @@
-﻿namespace Compiler
+﻿namespace CompilerLibrary
 {
     public interface IInput
     {

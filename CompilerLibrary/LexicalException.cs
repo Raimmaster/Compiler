@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Compiler
+namespace CompilerLibrary
 {
     [Serializable]
     internal class LexicalException : Exception
