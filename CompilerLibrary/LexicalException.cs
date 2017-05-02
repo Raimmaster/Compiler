@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Runtime.Serialization;
+//using System.Runtime.Serialization;
 
 namespace CompilerLibrary
 {
-    [Serializable]
+    //[Serializable]
     public class LexicalException : Exception
     {
         public LexicalException()
@@ -18,8 +18,8 @@ namespace CompilerLibrary
         {
         }
 
-        protected LexicalException(SerializationInfo info, StreamingContext context) : base(info, context)
+        /*protected LexicalException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-        }
+        }*/
     }
 }
