@@ -23,17 +23,17 @@ namespace CompilerLibrary
         private void InitValidEscapeCharacters()
         {
             _validEscapeCharactersList = new List<string>();
+            _validEscapeCharactersList.Add("\n");
             _validEscapeCharactersList.Add("\a");
             _validEscapeCharactersList.Add("\b");
             _validEscapeCharactersList.Add("\f");
-            _validEscapeCharactersList.Add("\n");
             _validEscapeCharactersList.Add("\r");
             _validEscapeCharactersList.Add("\t");
             _validEscapeCharactersList.Add("\v");
             _validEscapeCharactersList.Add("\'");
             _validEscapeCharactersList.Add("\"");
             _validEscapeCharactersList.Add("\\");
-            
+
         }
 
         private void InitReservedWordsDictionary()
@@ -56,24 +56,25 @@ namespace CompilerLibrary
 
         public Token GetNextToken()
         {
-            while (Char.IsWhiteSpace(_currentSymbol.Character))
+            while (char.IsWhiteSpace(_currentSymbol.Character))
             {
                 _currentSymbol = _inputString.GetNextSymbol();
             }
 
             if (_currentSymbol.Character == '/')
             {
-                string placeholderLexema = _currentSymbol.Character.ToString();
+                var placeholderLexema = _currentSymbol.Character.ToString();
 
                 _currentSymbol = _inputString.GetNextSymbol();
 
                 if (_currentSymbol.Character == '/')
                 {
                     do
-                       {
+                    {
                         _currentSymbol = _inputString.GetNextSymbol();
                     } while (_currentSymbol.Character != '\n' || _currentSymbol.Character == '\0');
-                }else
+                }
+                else
                 {
                     var tokenType = TokenType.OP_DIVISION;
 
@@ -87,15 +88,15 @@ namespace CompilerLibrary
                         tokenType = TokenType.OP_DIVISION_AND_ASSIGN;
                     }
                     return new Token(
-                        TokenType.OP_DIVISION_AND_ASSIGN, 
-                        placeholderLexema, 
+                        tokenType,
+                        placeholderLexema,
                         lexemaRow,
                         lexemaColumn
                         );
                 }
             }
 
-            if (Char.IsLetter(_currentSymbol.Character))
+            if (Char.IsLetter(_currentSymbol.Character) || _currentSymbol.Character == '_')
             {
                 var lexema = new StringBuilder();
                 var lexemaRow = _currentSymbol.RowCount;
@@ -104,11 +105,32 @@ namespace CompilerLibrary
                 {
                     lexema.Append(_currentSymbol.Character);
                     _currentSymbol = _inputString.GetNextSymbol();
-                } while (Char.IsLetter(_currentSymbol.Character));
+                } while (Char.IsLetterOrDigit(_currentSymbol.Character) ||
+                    _currentSymbol.Character == '_'
+                    );
 
-                var tokenType = _reservedWordsDict.ContainsKey(lexema.ToString()) ? 
+                var tokenType = _reservedWordsDict.ContainsKey(lexema.ToString()) ?
                     _reservedWordsDict[lexema.ToString()] : TokenType.ID;
-                
+
+                return new Token(
+                    tokenType,
+                    lexema.ToString(),
+                    lexemaRow,
+                    lexemaCol
+                    );
+            }
+            if (_currentSymbol.Character == '\"')
+            {
+                var lexema = new StringBuilder();
+                var lexemaRow = _currentSymbol.RowCount;
+                var lexemaCol = _currentSymbol.ColCount;
+                var tokenType = TokenType.LIT_STRING;
+                do
+                {
+                    lexema.Append(_currentSymbol.Character);
+                    _currentSymbol = _inputString.GetNextSymbol();
+                } while (_currentSymbol.Character != '\"');
+
                 return new Token(
                     tokenType,
                     lexema.ToString(),
@@ -118,28 +140,31 @@ namespace CompilerLibrary
             }
             else if (_currentSymbol.Character == '\'')
             {
+                var lexema = new StringBuilder(_currentSymbol.Character);
                 var lexemaRow = _currentSymbol.RowCount;
                 var lexemaCol = _currentSymbol.ColCount;
+                var tokenType = TokenType.LIT_CHAR;
+                AppendCharacterToLexema(lexema);
 
-                var lexema = new StringBuilder(_currentSymbol.Character.ToString());
-                do
+                if (_validEscapeCharactersList.Contains(_currentSymbol.Character.ToString())) //escape sequences
                 {
-                    lexema.Append(_currentSymbol.Character);
-                    _currentSymbol = _inputString.GetNextSymbol();
-
-                    if (_currentSymbol.Character == '\\')
-                    {
-                        
-                    }
-                } while (_currentSymbol.Character != '\'');
-
-                if (lexema.Length > 3)
+                    AppendCharacterToLexema(lexema);
+                }
+                else
                 {
-                    throw new LexicalException("A character cannot surpass the length of one.");
+                    AppendCharacterToLexema(lexema);//consume char
                 }
 
+                if (_currentSymbol.Character != '\'')
+                {
+                    throw new LexicalException("Char literal not correctly closed. " +
+                                               "Use a ' for closing char literals.");
+                }
+
+                AppendCharacterToLexema(lexema);
+
                 return new Token(
-                    TokenType.LIT_CHAR, 
+                    tokenType,
                     lexema.ToString(),
                     lexemaRow,
                     lexemaCol
@@ -155,14 +180,12 @@ namespace CompilerLibrary
 
                 if (_currentSymbol.Character == '=')
                 {
-                    lexema.Append(_currentSymbol.Character);
-                    _currentSymbol = _inputString.GetNextSymbol();
+                    AppendCharacterToLexema(lexema);
                     tokenType = TokenType.OP_SUM_AND_ASSIGN;
                 }
                 else if (_currentSymbol.Character == '+')
                 {
-                    lexema.Append(_currentSymbol.Character);
-                    _currentSymbol = _inputString.GetNextSymbol();
+                    AppendCharacterToLexema(lexema);
                     tokenType = TokenType.OP_INCREMENT;
                 }
 
@@ -183,8 +206,7 @@ namespace CompilerLibrary
 
                 if (_currentSymbol.Character == '?')
                 {
-                    lexema.Append(_currentSymbol.Character);
-                    _currentSymbol = _inputString.GetNextSymbol();
+                    AppendCharacterToLexema(lexema);
                     tokenType = TokenType.OP_NULL_COALESCING;
                 }
 
@@ -205,14 +227,12 @@ namespace CompilerLibrary
 
                 if (_currentSymbol.Character == '=')
                 {
-                    lexema.Append(_currentSymbol.Character);
-                    _currentSymbol = _inputString.GetNextSymbol();
+                    AppendCharacterToLexema(lexema);
                     tokenType = TokenType.OP_SUBSTRACT_AND_ASSIGN;
                 }
                 else if (_currentSymbol.Character == '-')
                 {
-                    lexema.Append(_currentSymbol.Character);
-                    _currentSymbol = _inputString.GetNextSymbol();
+                    AppendCharacterToLexema(lexema);
                     tokenType = TokenType.OP_DECREMENT;
                 }
 
@@ -233,8 +253,7 @@ namespace CompilerLibrary
 
                 if (_currentSymbol.Character == '=')
                 {
-                    lexema.Append(_currentSymbol.Character);
-                    _currentSymbol = _inputString.GetNextSymbol();
+                    AppendCharacterToLexema(lexema);
                     tokenType = TokenType.OP_MODULO_AND_ASSIGN;
                 }
 
@@ -255,8 +274,7 @@ namespace CompilerLibrary
 
                 if (_currentSymbol.Character == '=')
                 {
-                    lexema.Append(_currentSymbol.Character);
-                    _currentSymbol = _inputString.GetNextSymbol();
+                    AppendCharacterToLexema(lexema);
                     tokenType = TokenType.OP_MULTIPLICATION_AND_ASSIGN;
                 }
 
@@ -277,8 +295,7 @@ namespace CompilerLibrary
 
                 if (_currentSymbol.Character == '=')
                 {
-                    lexema.Append(_currentSymbol.Character);
-                    _currentSymbol = _inputString.GetNextSymbol();
+                    AppendCharacterToLexema(lexema);
                     tokenType = TokenType.OP_EQUALITY;
                 }
 
@@ -415,6 +432,20 @@ namespace CompilerLibrary
                     lexemaColumn
                     );
             }
+            else if (_currentSymbol.Character == ',')
+            {
+                var lexema = _currentSymbol.Character.ToString();
+                var lexemaRow = _currentSymbol.RowCount;
+                var lexemaColumn = _currentSymbol.ColCount;
+                _currentSymbol = _inputString.GetNextSymbol();
+
+                return new Token(
+                    TokenType.ARG_SEPARATOR,
+                    lexema,
+                    lexemaRow,
+                    lexemaColumn
+                    );
+            }
             else if (_currentSymbol.Character == '|')
             {
                 var lexema = new StringBuilder(_currentSymbol.Character);
@@ -425,8 +456,7 @@ namespace CompilerLibrary
 
                 if (_currentSymbol.Character == '=')
                 {
-                    lexema.Append(_currentSymbol.Character);
-                    _currentSymbol = _inputString.GetNextSymbol();
+                    AppendCharacterToLexema(lexema);
                     tokenType = TokenType.OP_BITWISE_OR_AND_ASSIGN;
                 }
 
@@ -447,8 +477,7 @@ namespace CompilerLibrary
 
                 if (_currentSymbol.Character == '=')
                 {
-                    lexema.Append(_currentSymbol.Character);
-                    _currentSymbol = _inputString.GetNextSymbol();
+                    AppendCharacterToLexema(lexema);
                     tokenType = TokenType.OP_BITWISE_AND_AND_ASSIGN;
                 }
 
@@ -469,8 +498,7 @@ namespace CompilerLibrary
 
                 if (_currentSymbol.Character == '=')
                 {
-                    lexema.Append(_currentSymbol.Character);
-                    _currentSymbol = _inputString.GetNextSymbol();
+                    AppendCharacterToLexema(lexema);
                     tokenType = TokenType.OP_XOR_AND_ASSIGN;
                 }
 
@@ -491,20 +519,17 @@ namespace CompilerLibrary
 
                 if (_currentSymbol.Character == '=')
                 {
-                    lexema.Append(_currentSymbol.Character);
-                    _currentSymbol = _inputString.GetNextSymbol();
+                    AppendCharacterToLexema(lexema);
                     tokenType = TokenType.LESS_THAN_OR_EQUALS;
                 }
                 else if (_currentSymbol.Character == '<')
                 {
-                    lexema.Append(_currentSymbol.Character);
-                    _currentSymbol = _inputString.GetNextSymbol();
+                    AppendCharacterToLexema(lexema);
                     tokenType = TokenType.OP_BIT_LEFT_SHIFT;
 
                     if (_currentSymbol.Character == '=')
                     {
-                        lexema.Append(_currentSymbol.Character);
-                        _currentSymbol = _inputString.GetNextSymbol();
+                        AppendCharacterToLexema(lexema);
                         tokenType = TokenType.OP_BIT_LEFT_SHIFT_AND_ASSIGN;
                     }
                 }
@@ -526,20 +551,17 @@ namespace CompilerLibrary
 
                 if (_currentSymbol.Character == '=')
                 {
-                    lexema.Append(_currentSymbol.Character);
-                    _currentSymbol = _inputString.GetNextSymbol();
+                    AppendCharacterToLexema(lexema);
                     tokenType = TokenType.GREATER_THAN_OR_EQUALS;
                 }
                 else if (_currentSymbol.Character == '>')
                 {
-                    lexema.Append(_currentSymbol.Character);
-                    _currentSymbol = _inputString.GetNextSymbol();
+                    AppendCharacterToLexema(lexema);
                     tokenType = TokenType.OP_BIT_RIGHT_SHIFT;
 
                     if (_currentSymbol.Character == '=')
                     {
-                        lexema.Append(_currentSymbol.Character);
-                        _currentSymbol = _inputString.GetNextSymbol();
+                        AppendCharacterToLexema(lexema);
                         tokenType = TokenType.OP_BIT_RIGHT_SHIFT_AND_ASSIGN;
                     }
                 }
@@ -561,8 +583,7 @@ namespace CompilerLibrary
 
                 if (_currentSymbol.Character == '=')
                 {
-                    lexema.Append(_currentSymbol.Character);
-                    _currentSymbol = _inputString.GetNextSymbol();
+                    AppendCharacterToLexema(lexema);
                     tokenType = TokenType.OP_NEGATION_EQUALITY;
                 }
 
@@ -583,8 +604,7 @@ namespace CompilerLibrary
 
                 if (_currentSymbol.Character == '=')
                 {
-                    lexema.Append(_currentSymbol.Character);
-                    _currentSymbol = _inputString.GetNextSymbol();
+                    AppendCharacterToLexema(lexema);
                     tokenType = TokenType.OP_BITWISE_UNARY_AND_ASSIGN;
                 }
 
@@ -603,14 +623,10 @@ namespace CompilerLibrary
 
                 if (_currentSymbol.Character == '0')
                 {
-                    lexema.Append(_currentSymbol.Character);
-                    _currentSymbol = _inputString.GetNextSymbol();
-
+                    AppendCharacterToLexema(lexema);
                     if (_currentSymbol.Character == 'x')
                     {
-                        lexema.Append(_currentSymbol.Character);
-                        _currentSymbol = _inputString.GetNextSymbol();
-                        
+                        AppendCharacterToLexema(lexema);
                         //65-70 A-F; 97-102 a-f
                         //While we get A-F, case not matters, consume
                         while (
@@ -622,24 +638,23 @@ namespace CompilerLibrary
                              && _currentSymbol.Character <= 102)
                         )
                         {
-                            lexema.Append(_currentSymbol.Character);
-                            _currentSymbol = _inputString.GetNextSymbol();
+                            AppendCharacterToLexema(lexema);
                         }
-                        
+
                         return new Token(
                         TokenType.LIT_HEX_INT,
                         lexema.ToString(),
                         lexemaRow,
                         lexemaColumn
                         );
-                    }else if (_currentSymbol.Character == 'b')
+                    }
+                    else if (_currentSymbol.Character == 'b')
                     {
-                        lexema.Append(_currentSymbol.Character);
-                        _currentSymbol = _inputString.GetNextSymbol();
+                        AppendCharacterToLexema(lexema);
                         while (_currentSymbol.Character == '0' || _currentSymbol.Character == '1')
                         {
-                            lexema.Append(_currentSymbol.Character);
-                            _currentSymbol = _inputString.GetNextSymbol();
+
+                            AppendCharacterToLexema(lexema);
                         }
 
                         return new Token(
@@ -656,13 +671,11 @@ namespace CompilerLibrary
                 var tokenType = TokenType.LIT_DECIMAL_INT;
                 if (_currentSymbol.Character == '.')
                 {
-                    lexema.Append(_currentSymbol.Character);
-                    _currentSymbol = _inputString.GetNextSymbol();
+                    AppendCharacterToLexema(lexema);
                     ConsumeDigits(lexema);
                     if (_currentSymbol.Character == 'f' || _currentSymbol.Character == 'F')
                     {
-                        lexema.Append(_currentSymbol.Character);
-                        _currentSymbol = _inputString.GetNextSymbol();
+                        AppendCharacterToLexema(lexema);
                         tokenType = TokenType.LIT_FLOAT;
                     }
                     else
@@ -670,7 +683,7 @@ namespace CompilerLibrary
                         throw new LexicalException("Float type must end with an f or F.");
                     }
                 }
-                
+
                 return new Token(
                     tokenType,
                     lexema.ToString(),
@@ -691,6 +704,12 @@ namespace CompilerLibrary
             {
                 throw new LexicalException("Symbol not supported.");
             }
+        }
+
+        private void AppendCharacterToLexema(StringBuilder lexema)
+        {
+            lexema.Append(_currentSymbol.Character);
+            _currentSymbol = _inputString.GetNextSymbol();
         }
 
         private void ConsumeDigits(StringBuilder lexema)

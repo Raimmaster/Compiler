@@ -64,6 +64,9 @@
         OP_INCREMENT,
         OP_DECREMENT,
         BRACKET_OPEN,
-        BRACKET_CLOSE
+        BRACKET_CLOSE,
+        LIT_ESCAPE_CHAR,
+        ARG_SEPARATOR,
+        LIT_STRING
     }
 }

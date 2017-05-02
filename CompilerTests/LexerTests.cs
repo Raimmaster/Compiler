@@ -268,5 +268,75 @@ namespace CompilerTests
             var token = lexer.GetNextToken();
             Assert.AreEqual(TokenType.BRACKET_CLOSE, token.type);
         }
+
+        [TestMethod]
+        public void AsIsOperatorsTest()
+        {
+            var inputString = new InputString("tester as _num is __1abc");
+            var expectedTypes = new TokenType[]
+                {TokenType.ID, TokenType.AS_KEYWORD, TokenType.ID, TokenType.IS_KEYWORD, TokenType.ID};
+            var lexer = new Lexer(inputString);
+            var token = lexer.GetNextToken();
+
+            uint i = 0;
+            while (token.type != TokenType.EOF)
+            {
+                Assert.AreEqual(expectedTypes[i++], token.type);
+                token = lexer.GetNextToken();
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(LexicalException))]
+        public void IncorrectCharFormatTest()
+        {
+            var inputString = new InputString(" '\n','\a','\b','\f','\r','\t','\v','\a', '\'  ");
+            var lexer = new Lexer(inputString);
+            var token = lexer.GetNextToken();
+
+            while (token.type != TokenType.EOF)
+            {
+                token = lexer.GetNextToken();
+            }
+        }
+
+        [TestMethod]
+        public void CorrectStringLiteralTest()
+        {
+            var inputString = new InputString(" \"Correct testing of string literal with \tescapes\n here.\"  ");
+            var lexer = new Lexer(inputString);
+            var token = lexer.GetNextToken();
+            Assert.AreEqual(TokenType.LIT_STRING, token.type);
+        }
+
+        [TestMethod]
+        public void EscapeCharactersTest()
+        {
+            var inputString = new InputString(" '\n','\a','\b','\f', '\r', '\t', '\v', '\a', '\'', '\"', '\\' '\'' ");
+            var expectedTypes = new TokenType[]
+                {
+                        TokenType.LIT_CHAR, TokenType.ARG_SEPARATOR,
+                        TokenType.LIT_CHAR, TokenType.ARG_SEPARATOR,
+                        TokenType.LIT_CHAR, TokenType.ARG_SEPARATOR,
+                        TokenType.LIT_CHAR, TokenType.ARG_SEPARATOR,
+                        TokenType.LIT_CHAR, TokenType.ARG_SEPARATOR,
+                        TokenType.LIT_CHAR, TokenType.ARG_SEPARATOR,
+                        TokenType.LIT_CHAR, TokenType.ARG_SEPARATOR,
+                        TokenType.LIT_CHAR, TokenType.ARG_SEPARATOR,
+                        TokenType.LIT_CHAR, TokenType.ARG_SEPARATOR,
+                        TokenType.LIT_CHAR, TokenType.ARG_SEPARATOR,
+                        TokenType.LIT_CHAR, TokenType.LIT_CHAR
+                };
+            var lexer = new Lexer(inputString);
+            var token = lexer.GetNextToken();
+
+            uint i = 0;
+            while (token.type != TokenType.EOF)
+            {
+                Assert.AreEqual(expectedTypes[i++], token.type);
+                token = lexer.GetNextToken();
+            }
+        }
+
     }
 }

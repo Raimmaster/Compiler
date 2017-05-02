@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace CompilerLibrary
 {
     [Serializable]
-    internal class LexicalException : Exception
+    public class LexicalException : Exception
     {
         public LexicalException()
         {
