@@ -310,6 +310,15 @@ namespace CompilerTests
         }
 
         [TestMethod]
+        public void CorrectVerbatimStringLiteralTest()
+        {
+            var inputString = new InputString("@\"Correct testing of string literal with \tescapes\n here.\"");
+            var lexer = new Lexer(inputString);
+            var token = lexer.GetNextToken();
+            Assert.AreEqual(TokenType.LIT_VERBATIM_STRING, token.type);
+        }
+
+        [TestMethod]
         public void EscapeCharactersTest()
         {
             var inputString = new InputString(" '\n','\a','\b','\f', '\r', '\t', '\v', '\a', '\'', '\"', '\\' '\'' ");

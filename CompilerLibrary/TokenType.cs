@@ -67,6 +67,7 @@
         BRACKET_CLOSE,
         LIT_ESCAPE_CHAR,
         ARG_SEPARATOR,
-        LIT_STRING
+        LIT_STRING,
+        LIT_VERBATIM_STRING
     }
 }

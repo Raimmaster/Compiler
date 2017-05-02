@@ -121,22 +121,10 @@ namespace CompilerLibrary
             }
             if (_currentSymbol.Character == '\"')
             {
-                var lexema = new StringBuilder();
-                var lexemaRow = _currentSymbol.RowCount;
-                var lexemaCol = _currentSymbol.ColCount;
-                var tokenType = TokenType.LIT_STRING;
-                do
-                {
-                    lexema.Append(_currentSymbol.Character);
-                    _currentSymbol = _inputString.GetNextSymbol();
-                } while (_currentSymbol.Character != '\"');
-
-                return new Token(
-                    tokenType,
-                    lexema.ToString(),
-                    lexemaRow,
-                    lexemaCol
-                    );
+                return StringLiteralConsume(TokenType.LIT_STRING);
+            }else if (_currentSymbol.Character == '@')
+            {
+                return StringLiteralConsume(TokenType.LIT_VERBATIM_STRING);
             }
             else if (_currentSymbol.Character == '\'')
             {
@@ -704,6 +692,26 @@ namespace CompilerLibrary
             {
                 throw new LexicalException("Symbol not supported.");
             }
+        }
+
+        private Token StringLiteralConsume(TokenType tokenType)
+        {
+            var lexema = new StringBuilder();
+            var lexemaRow = _currentSymbol.RowCount;
+            var lexemaCol = _currentSymbol.ColCount;
+            
+            do
+            {
+                lexema.Append(_currentSymbol.Character);
+                _currentSymbol = _inputString.GetNextSymbol();
+            } while (_currentSymbol.Character != '\"');
+
+            return new Token(
+                tokenType,
+                lexema.ToString(),
+                lexemaRow,
+                lexemaCol
+                );
         }
 
         private void AppendCharacterToLexema(StringBuilder lexema)
