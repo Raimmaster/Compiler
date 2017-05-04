@@ -10,20 +10,21 @@ namespace Compiler
     {
         static void Main(string[] args)
         {
-            var inputString = new InputString(@"print IDTEST = 5595 + ( TRE ) - QUATTRO * UNO//Hola
-IDDUE/ALGO;");
+            var inputString = new InputString(@"5+5-(9+5)");
 
             var lexer = new Lexer(inputString);
 
-            Token token = lexer.GetNextToken();
+            /*Token token = lexer.GetNextToken();
 
             while (token.type != TokenType.EOF)
             {
                 System.Console.Out.WriteLine(token);
                 token = lexer.GetNextToken();
-            }
+            }*/
 
-            System.Console.Out.WriteLine(token);
+            var parser = new Parser(lexer);
+            parser.Parse();
+            //System.Console.Out.WriteLine(token);
             
             //Symbol currentSymbol = inputString.GetNextSymbol();
 
