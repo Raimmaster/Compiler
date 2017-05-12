@@ -11,11 +11,9 @@ namespace Compiler
     {
         static void Main(string[] args)
         {
-            var inputString = new InputString(@"read a; read b; c = a + b; print (a+b+c);");
-
+            var inputString = new InputString(@"read a; read b; c = a + b; print (a+b-c); print(c);");
             var lexer = new Lexer(inputString);
             
-
             var parser = new Parser(lexer);
             parser.Parse();
             Console.Out.WriteLine("EXIT!!");
