@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Runtime.Serialization;
+
 namespace Compiler
 {
+    [Serializable]
     internal class LexicalException : Exception
     {
         public LexicalException()
@@ -12,6 +15,10 @@ namespace Compiler
         }
 
         public LexicalException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
+        protected LexicalException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
