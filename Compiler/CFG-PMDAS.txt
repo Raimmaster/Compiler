@@ -1,0 +1,20 @@
+E_prime:
+	| + T { E_prime.param = new SumNode(E_prime.param, T.node) } E_prime { E_prime.node = E_prime1.node }
+	| - T { E_prime.param = new SubNode(E_prime.param, T.node) } E_prime { E_prime.node = E_prime1.node }
+	| EPSILON { E_prime.node = E_prime.param}
+
+E:
+	| T {E_prime.param = T.node } E_prime {E.node = E_prime.node}
+
+T_prime:
+	| * F { t_prime1.param = new MulNode(T_prime.param, F.node) }  T_prime  { T_prime.node = T_prime1.node; } 
+	| / F { t_prime1.param = new DivNode(T_prime.param, F.node) }  T_prime  { T_prime.node = T_prime1.node; }
+	| EPSILON       { T_prime.node = T_prime.param; }
+
+T:
+	| F             { T_prime.param = F.node; } T_prime { T.node = T_prime.node; }
+
+F:
+	| (E)	        { F.node = E.node; }
+	| num	        { F.node = new NumNode(to_float(num)); }
+    | id            { F.node = new IdNode(id); }

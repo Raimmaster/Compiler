@@ -16,50 +16,57 @@ namespace Compiler
             vars = new Dictionary<string, float>();
         }
 
-        public void Parse()
+        public List<StatementNode> Parse()
         {
-            Codigo();
+            var code = Codigo();
             if (token.type != TokenType.EOF)
             {
                 throw new ParserException("End of file expected.");
             }
+
+            return code;
         }
 
-        private void Codigo()
+        private List<StatementNode> Codigo()
         {
-            ListaSentencias();
+            return ListaSentencias();
         }
 
-        private void ListaSentencias()
+        private List<StatementNode> ListaSentencias()
         {
+            var statementNodesArray = new List<StatementNode>();
             if (
                 token.type == TokenType.ID ||
                 token.type == TokenType.PRINT_CALL ||
                 token.type == TokenType.READ_CALL
             )
             {
-                Sentencia();
-                ListaSentencias();
+                var sentencia = Sentencia();
+                var listaSentencias = ListaSentencias();
+
+                listaSentencias.Insert(0, sentencia);
+
+                return listaSentencias;
             }
             else
             {
-                //TODO: Epsilon case 
+                return statementNodesArray;
             }
         }
 
-        private void Sentencia()
+        private StatementNode Sentencia()
         {
             if (token.type == TokenType.ID)
             {
-                Asignar();
+                return Asignar();
             }
             else if (token.type == TokenType.PRINT_CALL)
             {
-                Imprimir();
+                return Imprimir();
             }
             else if (token.type == TokenType.READ_CALL)
             {
-                Leer();
+                return Leer();
             }
             else
             {
@@ -68,7 +75,7 @@ namespace Compiler
             }
         }
 
-        private void Leer()
+        private StatementNode Leer()
         {
             if (token.type != TokenType.READ_CALL)
             {
@@ -89,11 +96,12 @@ namespace Compiler
                     token.row + " and column " + token.column);
             }
             token = lexer.GetNextToken();
-            string inputText = Console.ReadLine();
-            this.vars[idLexema] = float.Parse(inputText);
+            //string inputText = Console.ReadLine();
+            string inputText = "7";
+            return new ReadNode(new IDNode(idLexema), new NumNode(float.Parse(inputText)));
         }
 
-        private void Imprimir()
+        private StatementNode Imprimir()
         {
             if (token.type != TokenType.PRINT_CALL)
             {
@@ -101,17 +109,17 @@ namespace Compiler
                     token.row + " and column " + token.column);
             }
             token = lexer.GetNextToken();
-            float eValor = E();
+            var eValor = E();
             if (token.type != TokenType.END_STATEMENT)
             {
                 throw new SyntaxErrorException("; operand expected on row " +
                     token.row + " and column " + token.column);
             }
             token = lexer.GetNextToken();
-            Console.Out.WriteLine(eValor);
+            return new PrintNode(eValor);
         }
 
-        private void Asignar()
+        private StatementNode Asignar()
         {   
             if (token.type != TokenType.ID)
             {
@@ -124,40 +132,40 @@ namespace Compiler
                 throw new SyntaxErrorException("= operand expected!");
             }
             token = lexer.GetNextToken();
-            float eValor = E();
+            var eValor = E();
             
             if (token.type != TokenType.END_STATEMENT)
             {
                 throw new SyntaxErrorException("; operand expected");
             }
             token = lexer.GetNextToken();
-
-            this.vars[idLexema] = eValor;
+            return new AssignNode(new IDNode(idLexema), eValor);
+            //this.vars[idLexema] = eValor;
         }
 
-        private float E()
+        private ExpressionNode E()
         {
-            float tValor = T();
-            float ePrimaValor = EPrime(tValor);
+            var tValor = T();
+            var ePrimaValor = EPrime(tValor);
 
             return ePrimaValor;
         }
 
-        private float EPrime(float param)
+        private ExpressionNode EPrime(ExpressionNode param)
         {
             if (token.type == TokenType.OP_SUM)
             {
                 token = lexer.GetNextToken();
-                float tValor = T();
-                float ePrima1Valor = EPrime(param + tValor);
+                var tValor = T();
+                var ePrima1Valor = EPrime(new SumNode(param, tValor));
 
                 return ePrima1Valor;
             }
             else if (token.type == TokenType.OP_SUBSTRACT)
             {
                 token = lexer.GetNextToken();
-                float tValor = T();
-                float ePrima1Valor = EPrime(param - tValor);
+                var tValor = T();
+                var ePrima1Valor = EPrime(new SubNode(param, tValor));
 
                 return ePrima1Valor;
             }
@@ -167,19 +175,19 @@ namespace Compiler
             }
         }
 
-        private float T()
+        private ExpressionNode T()
         {
-            float fValor = F();
-            float tValor = TPrime(fValor);
+            var fValor = F();
+            var tValor = TPrime(fValor);
             return tValor;
         }
 
-        private float F()
+        private ExpressionNode F()
         {
             if (token.type == TokenType.PAREN_OPEN)
             {
                 token = lexer.GetNextToken();
-                float eValor = E();
+                var eValor = E();
                 if (token.type != TokenType.PAREN_CLOSE)
                 {
                     throw new ParserException("Expected closing parenthesis.");
@@ -188,13 +196,13 @@ namespace Compiler
                 return eValor;
             }else if (token.type == TokenType.LIT_INT)
             {
-                float valor = float.Parse(token.lexema);
+                var valor = new NumNode(float.Parse(token.lexema));
                 token = lexer.GetNextToken();
                 return valor;
             }else if (token.type == TokenType.ID)
             {
                 string idLexema = token.lexema;
-                float valor = this.vars[idLexema];
+                var valor = new IDNode(idLexema);
                 token = lexer.GetNextToken();
 
                 return valor;
@@ -205,21 +213,21 @@ namespace Compiler
             }
         }
 
-        private float TPrime(float param)
+        private ExpressionNode TPrime(ExpressionNode param)
         {
             if (token.type == TokenType.OP_MULTIPLICATION)
             {
                 token = lexer.GetNextToken();
-                float fValor = F();
-                float tPrima1Valor = TPrime(param * fValor);
+                var fValor = F();
+                var tPrima1Valor = TPrime(new MulNode(param, fValor));
 
                 return tPrima1Valor;
             }
             else if (token.type == TokenType.OP_DIVISION)
             {
                 token = lexer.GetNextToken();
-                float fValor = F();
-                float tPrima1Valor = TPrime(param / fValor);
+                var fValor = F();
+                var tPrima1Valor = TPrime(new DivNode(param, fValor));
 
                 return tPrima1Valor;
             }
