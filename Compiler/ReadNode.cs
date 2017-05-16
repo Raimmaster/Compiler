@@ -1,3 +1,5 @@
+using System;
+
 namespace Compiler
 {
     public class ReadNode : StatementNode
@@ -9,6 +11,11 @@ namespace Compiler
         {
             this.iDNode = iDNode;
             this.numNode = numNode;
+        }
+
+        public override void Evaluate()
+        {
+            throw new NotImplementedException();
         }
     }
 }

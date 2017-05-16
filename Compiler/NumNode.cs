@@ -1,3 +1,5 @@
+using System;
+
 namespace Compiler
 {
     public class NumNode : ExpressionNode
@@ -7,6 +9,11 @@ namespace Compiler
         public NumNode(float v)
         {
             this.v = v;
+        }
+
+        public override float evaluate()
+        {
+            return v;
         }
     }
 }

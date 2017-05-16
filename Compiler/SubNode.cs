@@ -1,14 +1,21 @@
+using System;
+
 namespace Compiler
 {
     public class SubNode : ExpressionNode
     {
-        private ExpressionNode param;
-        private ExpressionNode tValor;
+        private ExpressionNode leftOperand;
+        private ExpressionNode rightOperand;
 
-        public SubNode(ExpressionNode param, ExpressionNode tValor)
+        public SubNode(ExpressionNode leftOperand, ExpressionNode rightOperand)
         {
-            this.param = param;
-            this.tValor = tValor;
+            this.leftOperand = leftOperand;
+            this.rightOperand = rightOperand;
+        }
+
+        public override float evaluate()
+        {
+            return leftOperand.evaluate() - rightOperand.evaluate();
         }
     }
 }

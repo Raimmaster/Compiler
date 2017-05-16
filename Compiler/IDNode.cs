@@ -1,3 +1,5 @@
+using System;
+
 namespace Compiler
 {
     public class IDNode : ExpressionNode
@@ -7,6 +9,11 @@ namespace Compiler
         public IDNode(string idLexema)
         {
             this.idLexema = idLexema;
+        }
+
+        public override float evaluate()
+        {
+            throw new NotImplementedException();
         }
     }
 }

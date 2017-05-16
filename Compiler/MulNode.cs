@@ -1,3 +1,5 @@
+using System;
+
 namespace Compiler
 {
     public class MulNode : ExpressionNode
@@ -9,6 +11,11 @@ namespace Compiler
         {
             this.leftOperand = leftOperand;
             this.rightOperand = rightOperand;
+        }
+
+        public override float evaluate()
+        {
+            return leftOperand.evaluate() * rightOperand.evaluate();
         }
     }
 }

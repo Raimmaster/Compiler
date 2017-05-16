@@ -1,3 +1,5 @@
+using System;
+
 namespace Compiler
 {
     public class AssignNode : StatementNode
@@ -9,6 +11,11 @@ namespace Compiler
         {
             this.idLexema = idLexema;
             this.eValor = eValor;
+        }
+
+        public override void Evaluate()
+        {
+            throw new NotImplementedException();
         }
     }
 }

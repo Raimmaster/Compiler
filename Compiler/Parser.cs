@@ -177,9 +177,33 @@ namespace Compiler
 
         private ExpressionNode T()
         {
-            var fValor = F();
+            var fValor = G();
             var tValor = TPrime(fValor);
             return tValor;
+        }
+
+        private ExpressionNode G()
+        {
+            var fValor = F();
+            var gValor = GPrime(fValor);
+
+            return gValor;
+        }
+
+        private ExpressionNode GPrime(ExpressionNode param)
+        {
+            if(token.type == TokenType.OP_EXPONENT)
+            {
+                token = lexer.GetNextToken();
+                var fValor = F();
+                var gPrima1Valor = GPrime(new ExpNode(param, fValor));
+
+                return gPrima1Valor;
+            }
+            else
+            {
+                return param;
+            }
         }
 
         private ExpressionNode F()
@@ -218,7 +242,7 @@ namespace Compiler
             if (token.type == TokenType.OP_MULTIPLICATION)
             {
                 token = lexer.GetNextToken();
-                var fValor = F();
+                var fValor = G();
                 var tPrima1Valor = TPrime(new MulNode(param, fValor));
 
                 return tPrima1Valor;
@@ -226,7 +250,7 @@ namespace Compiler
             else if (token.type == TokenType.OP_DIVISION)
             {
                 token = lexer.GetNextToken();
-                var fValor = F();
+                var fValor = G();
                 var tPrima1Valor = TPrime(new DivNode(param, fValor));
 
                 return tPrima1Valor;

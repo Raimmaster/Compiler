@@ -10,14 +10,22 @@ namespace Compiler
     class Program
     {
         static void Main(string[] args)
-        {
-            var inputString = new InputString(@"read a; read b; c = a + b; 
-                d = (c / c) + a - (b * c) + (c - b); 
-                print (a+b*c); print(c); print(d);");
+        {   
+            //var input = @"read a; read b; c = a + b; 
+            //    d = (c / c) + a - (b * c) + (c - b); 
+             //   print (a+b*c); print(c); print(d); print(a^a^a);";
+            
+            var input = @"print( (6*2)^2 + 3 - (5^3) + 10);";
+
+            var inputString = new InputString(input);
             var lexer = new Lexer(inputString);
             
             var parser = new Parser(lexer);
             var code = parser.Parse();
+            foreach(var production in code)
+            {
+                production.Evaluate();
+            }
             Console.Out.WriteLine("EXIT!!");
             System.Console.ReadKey();
         }

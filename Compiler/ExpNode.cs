@@ -2,12 +2,12 @@ using System;
 
 namespace Compiler
 {
-    public class DivNode : ExpressionNode
+    public class ExpNode : ExpressionNode
     {
         private ExpressionNode leftOperand;
         private ExpressionNode rightOperand;
 
-        public DivNode(ExpressionNode leftOperand, ExpressionNode rightOperand)
+        public ExpNode(ExpressionNode leftOperand, ExpressionNode rightOperand)
         {
             this.leftOperand = leftOperand;
             this.rightOperand = rightOperand;
@@ -15,7 +15,10 @@ namespace Compiler
 
         public override float evaluate()
         {
-            return leftOperand.evaluate() / rightOperand.evaluate();
+            var result = Math.Pow(leftOperand.evaluate(), rightOperand.evaluate());
+            float resultado = float.Parse(result.ToString());
+
+            return resultado;
         }
     }
 }
