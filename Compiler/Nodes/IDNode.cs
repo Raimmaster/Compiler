@@ -11,7 +11,7 @@ namespace Compiler
             this.idLexema = idLexema;
         }
 
-        public override float evaluate()
+        public override dynamic evaluate()
         {
             throw new NotImplementedException();
         }

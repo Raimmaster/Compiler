@@ -5,12 +5,9 @@ namespace Compiler
     public class ReadNode : StatementNode
     {
         private IDNode iDNode;
-        private NumNode numNode;
-
-        public ReadNode(IDNode iDNode, NumNode numNode)
+        public ReadNode(IDNode iDNode)
         {
             this.iDNode = iDNode;
-            this.numNode = numNode;
         }
 
         public override void Evaluate()

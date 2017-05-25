@@ -11,7 +11,7 @@ namespace Compiler
             this.v = v;
         }
 
-        public override float evaluate()
+        public override dynamic evaluate()
         {
             return v;
         }

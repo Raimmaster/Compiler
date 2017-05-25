@@ -2,20 +2,20 @@ using System;
 
 namespace Compiler
 {
-    public class SubNode : ExpressionNode
+    public class DivNode : ExpressionNode
     {
         private ExpressionNode leftOperand;
         private ExpressionNode rightOperand;
 
-        public SubNode(ExpressionNode leftOperand, ExpressionNode rightOperand)
+        public DivNode(ExpressionNode leftOperand, ExpressionNode rightOperand)
         {
             this.leftOperand = leftOperand;
             this.rightOperand = rightOperand;
         }
 
-        public override float evaluate()
+        public override dynamic evaluate()
         {
-            return leftOperand.evaluate() - rightOperand.evaluate();
+            return leftOperand.evaluate() / rightOperand.evaluate();
         }
     }
 }

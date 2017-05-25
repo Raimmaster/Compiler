@@ -34,7 +34,6 @@ namespace Compiler
 
         private List<StatementNode> ListaSentencias()
         {
-            var statementNodesArray = new List<StatementNode>();
             if (
                 token.type == TokenType.ID ||
                 token.type == TokenType.PRINT_CALL ||
@@ -50,7 +49,7 @@ namespace Compiler
             }
             else
             {
-                return statementNodesArray;
+                return new List<StatementNode>();
             }
         }
 
@@ -96,9 +95,8 @@ namespace Compiler
                     token.row + " and column " + token.column);
             }
             token = lexer.GetNextToken();
-            //string inputText = Console.ReadLine();
-            string inputText = "7";
-            return new ReadNode(new IDNode(idLexema), new NumNode(float.Parse(inputText)));
+            
+            return new ReadNode(new IDNode(idLexema));
         }
 
         private StatementNode Imprimir()

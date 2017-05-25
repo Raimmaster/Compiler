@@ -13,7 +13,7 @@ namespace Compiler
             this.rightOperand = rightOperand;
         }
 
-        public override float evaluate()
+        public override dynamic evaluate()
         {
             return leftOperand.evaluate() + rightOperand.evaluate();
         }

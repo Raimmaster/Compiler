@@ -2,6 +2,6 @@ namespace Compiler
 {
     public abstract class ExpressionNode
     {
-        public abstract float evaluate();
+        public abstract dynamic evaluate();
     }
 }
