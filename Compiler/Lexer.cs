@@ -124,6 +124,36 @@ namespace Compiler
                     lexemaColumn
                     );
             }
+            else if (currentSymbol.character == '/')
+            {
+                string lexema = currentSymbol.character.ToString();
+                var lexemaRow = currentSymbol.rowCount;
+                var lexemaColumn = currentSymbol.colCount;
+
+                currentSymbol = inputString.GetNextSymbol();
+
+                return new Token(
+                    TokenType.OP_DIVISION,
+                    lexema,
+                    lexemaRow,
+                    lexemaColumn
+                    );
+            }
+            else if (currentSymbol.character == '^')
+            {
+                string lexema = currentSymbol.character.ToString();
+                var lexemaRow = currentSymbol.rowCount;
+                var lexemaColumn = currentSymbol.colCount;
+
+                currentSymbol = inputString.GetNextSymbol();
+
+                return new Token(
+                    TokenType.OP_EXPONENT,
+                    lexema,
+                    lexemaRow,
+                    lexemaColumn
+                    );
+            }
             else if (currentSymbol.character == '=')
             {
                 string lexema = currentSymbol.character.ToString();
