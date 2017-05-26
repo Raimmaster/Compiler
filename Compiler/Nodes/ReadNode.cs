@@ -10,9 +10,9 @@ namespace Compiler
             this.iDNode = iDNode;
         }
 
-        public override void Evaluate()
+        public override void Interpret()
         {
-            throw new NotImplementedException();
+            VariablesSingleton.Variables[iDNode.ToString()] = float.Parse(Console.ReadLine());
         }
     }
 }

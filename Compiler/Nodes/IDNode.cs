@@ -1,5 +1,3 @@
-using System;
-
 namespace Compiler
 {
     public class IDNode : ExpressionNode
@@ -13,7 +11,12 @@ namespace Compiler
 
         public override dynamic evaluate()
         {
-            throw new NotImplementedException();
+            return VariablesSingleton.Variables[idLexema];
+        }
+
+        public override string ToString()
+        {
+            return idLexema;
         }
     }
 }

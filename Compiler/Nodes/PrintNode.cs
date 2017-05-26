@@ -11,7 +11,7 @@ namespace Compiler
             this.eValor = eValor;
         }
 
-        public override void Evaluate()
+        public override void Interpret()
         {
             Console.Out.WriteLine("Valor: " + eValor.evaluate());
         }

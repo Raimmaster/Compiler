@@ -13,9 +13,9 @@ namespace Compiler
             this.eValor = eValor;
         }
 
-        public override void Evaluate()
+        public override void Interpret()
         {
-            throw new NotImplementedException();
+            VariablesSingleton.Variables[idLexema.ToString()] = eValor.evaluate();
         }
     }
 }

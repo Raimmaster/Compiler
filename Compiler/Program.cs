@@ -11,12 +11,10 @@ namespace Compiler
     {
         static void Main(string[] args)
         {   
-            /*var input = @"read a; read b; c = a + b; 
-                d = (c / c) + a - (b * c) + (c - b); 
-               print (a+b*c); print(c); print(d); 
-               print((6*2)^2 + 3 - (5^3) + 10);";
-            */
-            var input = @" print(1+2);";
+            var input = @"read a; read b; c = a + b; 
+                d = b*c; print c; print d;";
+            
+            //var input = @" print(1+2);";
             
 
             var inputString = new InputString(input);
@@ -26,7 +24,7 @@ namespace Compiler
             var code = parser.Parse();
             foreach(var production in code)
             {
-                production.Evaluate();
+                production.Interpret();
             }
             Console.Out.WriteLine("EXIT!!");
             System.Console.ReadKey();
