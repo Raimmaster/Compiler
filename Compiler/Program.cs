@@ -14,9 +14,6 @@ namespace Compiler
             var input = @"read a; read b; c = a + b; 
                 d = b*c; print c; print d;";
             
-            //var input = @" print(1+2);";
-            
-
             var inputString = new InputString(input);
             var lexer = new Lexer(inputString);
             
@@ -26,7 +23,6 @@ namespace Compiler
             {
                 production.Interpret();
             }
-            Console.Out.WriteLine("EXIT!!");
             System.Console.ReadKey();
         }
     }
