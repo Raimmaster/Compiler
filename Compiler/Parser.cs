@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Compiler
 {
+    
     public class Parser
     {
         private Lexer lexer;
