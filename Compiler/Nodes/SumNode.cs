@@ -2,20 +2,23 @@ using System;
 
 namespace Compiler
 {
-    public class SumNode : ExpressionNode
+    public class SumNode : BinaryOperator
     {
-        private ExpressionNode leftOperand;
-        private ExpressionNode rightOperand;
-
-        public SumNode(ExpressionNode leftOperand, ExpressionNode rightOperand)
+        public SumNode(ExpressionNode leftOperand, ExpressionNode rightOperand) : base(leftOperand, rightOperand)
         {
-            this.leftOperand = leftOperand;
-            this.rightOperand = rightOperand;
+            rules["IntType,IntType"] = new IntType();
+            rules["IntType,BoolType"] = new IntType();
+            rules["BoolType,IntType"] = new IntType();
         }
 
-        public override dynamic evaluate()
+        public override dynamic Evaluate()
         {
-            return leftOperand.evaluate() + rightOperand.evaluate();
+            return leftOperand.Evaluate() + rightOperand.Evaluate();
+        }
+
+        public override Types EvaluateType()
+        {
+            throw new NotImplementedException();
         }
     }
 }

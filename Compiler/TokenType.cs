@@ -16,6 +16,9 @@
         PAREN_OPEN,
         PAREN_CLOSE,
         END_STATEMENT,
-        OP_EXPONENT
+        OP_EXPONENT,
+        TRUE_KW,
+        FALSE_KW,
+        LIT_BOOL
     }
 }

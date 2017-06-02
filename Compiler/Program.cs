@@ -12,7 +12,7 @@ namespace Compiler
         static void Main(string[] args)
         {   
             var input = @"read a; read b; c = a + b; 
-                d = b*c; print c; print d;";
+                d = b*c; print c; print d; f = true; print f;";
             
             var inputString = new InputString(input);
             var lexer = new Lexer(inputString);

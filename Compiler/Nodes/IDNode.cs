@@ -1,3 +1,5 @@
+using System;
+
 namespace Compiler
 {
     public class IDNode : ExpressionNode
@@ -9,9 +11,19 @@ namespace Compiler
             this.idLexema = idLexema;
         }
 
-        public override dynamic evaluate()
+        public override dynamic Evaluate()
         {
             return VariablesSingleton.Variables[idLexema];
+        }
+
+        public override Types EvaluateType()
+        {
+            if(SymbolsTable.vars.ContainsKey(idLexema))
+            {
+                return SymbolsTable.vars[idLexema];
+            }
+
+            throw new SemanticException("Variable does not exist!");
         }
 
         public override string ToString()

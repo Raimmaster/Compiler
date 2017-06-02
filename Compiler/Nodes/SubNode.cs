@@ -13,9 +13,9 @@ namespace Compiler
             this.rightOperand = rightOperand;
         }
 
-        public override dynamic evaluate()
+        public override dynamic Evaluate()
         {
-            return leftOperand.evaluate() - rightOperand.evaluate();
+            return leftOperand.Evaluate() - rightOperand.Evaluate();
         }
     }
 }

@@ -222,6 +222,11 @@ namespace Compiler
                 var valor = new NumNode(float.Parse(token.lexema));
                 token = lexer.GetNextToken();
                 return valor;
+            }else if (token.type == TokenType.LIT_BOOL)
+            {
+                var valor = new BoolNode(bool.Parse(token.lexema));
+                token = lexer.GetNextToken();
+                return valor;
             }else if (token.type == TokenType.ID)
             {
                 string idLexema = token.lexema;

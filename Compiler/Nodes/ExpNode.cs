@@ -13,9 +13,9 @@ namespace Compiler
             this.rightOperand = rightOperand;
         }
 
-        public override dynamic evaluate()
+        public override dynamic Evaluate()
         {
-            var result = Math.Pow(leftOperand.evaluate(), rightOperand.evaluate());
+            var result = Math.Pow(leftOperand.Evaluate(), rightOperand.Evaluate());
             float resultado = float.Parse(result.ToString());
 
             return resultado;

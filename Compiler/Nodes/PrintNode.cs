@@ -13,7 +13,7 @@ namespace Compiler
 
         public override void Interpret()
         {
-            Console.Out.WriteLine("Valor: " + eValor.evaluate());
+            Console.Out.WriteLine("Valor: " + eValor.Evaluate());
         }
     }
 }

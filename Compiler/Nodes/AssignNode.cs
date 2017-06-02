@@ -15,7 +15,7 @@ namespace Compiler
 
         public override void Interpret()
         {
-            VariablesSingleton.Variables[idLexema.ToString()] = eValor.evaluate();
+            VariablesSingleton.Variables[idLexema.ToString()] = eValor.Evaluate();
         }
     }
 }
