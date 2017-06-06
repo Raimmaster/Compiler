@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Compiler
 {
+    
     public class Parser
     {
         private Lexer lexer;
@@ -219,6 +220,11 @@ namespace Compiler
             }else if (token.type == TokenType.LIT_INT)
             {
                 var valor = new NumNode(float.Parse(token.lexema));
+                token = lexer.GetNextToken();
+                return valor;
+            }else if (token.type == TokenType.LIT_BOOL)
+            {
+                var valor = new BoolNode(bool.Parse(token.lexema));
                 token = lexer.GetNextToken();
                 return valor;
             }else if (token.type == TokenType.ID)

@@ -22,6 +22,8 @@ namespace Compiler
             reservedWordsDict = new Dictionary<string, TokenType>();
             reservedWordsDict["print"] = TokenType.PRINT_CALL;
             reservedWordsDict["read"] = TokenType.READ_CALL;
+            reservedWordsDict["true"] = TokenType.LIT_BOOL;
+            reservedWordsDict["false"] = TokenType.LIT_BOOL;
         }
 
         public Token GetNextToken()

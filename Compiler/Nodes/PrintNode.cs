@@ -11,9 +11,18 @@ namespace Compiler
             this.eValor = eValor;
         }
 
-        public override void Evaluate()
+        public override void Interpret()
         {
-            Console.Out.WriteLine("Valor: " + eValor.evaluate());
+            Console.Out.WriteLine("Valor: " + eValor.Evaluate());
+        }
+
+        public override void ValidateSemantic()
+        {
+            var valorType = eValor.EvaluateType();
+            if((!(valorType is IntType) && !(valorType is BoolType)))
+            {
+                throw new SemanticException("Invalid types.");
+            }
         }
     }
 }

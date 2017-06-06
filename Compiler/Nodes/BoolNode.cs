@@ -2,11 +2,11 @@ using System;
 
 namespace Compiler
 {
-    public class NumNode : ExpressionNode
+    public class BoolNode : ExpressionNode
     {
-        private float v;
+        public bool v;
 
-        public NumNode(float v)
+        public BoolNode(bool v)
         {
             this.v = v;
         }
@@ -18,7 +18,7 @@ namespace Compiler
 
         public override Types EvaluateType()
         {
-            return new IntType();
+            return new BoolType();
         }
     }
 }

@@ -10,9 +10,18 @@ namespace Compiler
             this.iDNode = iDNode;
         }
 
-        public override void Evaluate()
+        public override void Interpret()
         {
-            throw new NotImplementedException();
+            VariablesSingleton.Variables[iDNode.ToString()] = float.Parse(Console.ReadLine());
+        }
+
+        public override void ValidateSemantic()
+        {
+            var type = iDNode.EvaluateType();
+            if((!(type is IntType) && !(type is BoolType)))
+            {
+                throw new SemanticException("Invalid types.");
+            }
         }
     }
 }

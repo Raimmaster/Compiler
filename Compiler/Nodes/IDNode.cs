@@ -11,9 +11,24 @@ namespace Compiler
             this.idLexema = idLexema;
         }
 
-        public override dynamic evaluate()
+        public override dynamic Evaluate()
         {
-            throw new NotImplementedException();
+            return VariablesSingleton.Variables[idLexema];
+        }
+
+        public override Types EvaluateType()
+        {
+            if(SymbolsTable.vars.ContainsKey(idLexema))
+            {
+                return SymbolsTable.vars[idLexema];
+            }
+
+            throw new SemanticException("Variable does not exist!");
+        }
+
+        public override string ToString()
+        {
+            return idLexema;
         }
     }
 }
