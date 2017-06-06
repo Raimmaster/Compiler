@@ -2,15 +2,12 @@ using System;
 
 namespace Compiler
 {
-    public class MulNode : ExpressionNode
+    public class MulNode : BinaryOperator
     {
-        private ExpressionNode leftOperand;
-        private ExpressionNode rightOperand;
-
-        public MulNode(ExpressionNode leftOperand, ExpressionNode rightOperand)
+        public MulNode(ExpressionNode leftOperand, ExpressionNode rightOperand) : base(leftOperand, rightOperand)
         {
-            this.leftOperand = leftOperand;
-            this.rightOperand = rightOperand;
+            rules["IntType,IntType"] = new IntType();
+            rules["BoolType,BoolType"] = new BoolType();
         }
 
         public override dynamic Evaluate()

@@ -15,5 +15,14 @@ namespace Compiler
         {
             Console.Out.WriteLine("Valor: " + eValor.Evaluate());
         }
+
+        public override void ValidateSemantic()
+        {
+            var valorType = eValor.EvaluateType();
+            if((!(valorType is IntType) && !(valorType is BoolType)))
+            {
+                throw new SemanticException("Invalid types.");
+            }
+        }
     }
 }

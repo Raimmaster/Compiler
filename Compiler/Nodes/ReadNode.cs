@@ -14,5 +14,14 @@ namespace Compiler
         {
             VariablesSingleton.Variables[iDNode.ToString()] = float.Parse(Console.ReadLine());
         }
+
+        public override void ValidateSemantic()
+        {
+            var type = iDNode.EvaluateType();
+            if((!(type is IntType) && !(type is BoolType)))
+            {
+                throw new SemanticException("Invalid types.");
+            }
+        }
     }
 }

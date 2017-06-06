@@ -2,15 +2,12 @@ using System;
 
 namespace Compiler
 {
-    public class DivNode : ExpressionNode
+    public class DivNode : BinaryOperator
     {
-        private ExpressionNode leftOperand;
-        private ExpressionNode rightOperand;
-
-        public DivNode(ExpressionNode leftOperand, ExpressionNode rightOperand)
+        
+        public DivNode(ExpressionNode leftOperand, ExpressionNode rightOperand) : base(leftOperand, rightOperand)
         {
-            this.leftOperand = leftOperand;
-            this.rightOperand = rightOperand;
+            rules["IntType,IntType"] = new IntType();
         }
 
         public override dynamic Evaluate()
