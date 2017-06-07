@@ -11,7 +11,7 @@ namespace Compiler
     {
         static void Main(string[] args)
         {   
-            var input = @"read a; read b; c = a + b; 
+            var input = @"a = 1; b = 4; read a; read b; c = a + b; 
                 d = b*c; print c; print d; f = true; print f;";
             
             var inputString = new InputString(input);
@@ -21,8 +21,9 @@ namespace Compiler
             var code = parser.Parse();
             foreach(var production in code)
             {
-                production.Interpret();
+                production.ValidateSemantic();
             }
+            Console.WriteLine("Validated!");
             System.Console.ReadKey();
         }
     }

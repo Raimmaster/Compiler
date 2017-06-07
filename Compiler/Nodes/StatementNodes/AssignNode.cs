@@ -29,7 +29,7 @@ namespace Compiler
             }
             var nodeType = idLexema.EvaluateType();
 
-            if(!(valorType.GetType() == nodeType.GetType()))
+            if(valorType.GetType() != nodeType.GetType())
             {
                 throw new SemanticException("Incorrect assignation types.");
             }
