@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
+
 namespace Compiler
 {
-    
+
     public class Parser
     {
         private Lexer lexer;
@@ -38,7 +39,9 @@ namespace Compiler
             if (
                 token.type == TokenType.ID ||
                 token.type == TokenType.PRINT_CALL ||
-                token.type == TokenType.READ_CALL
+                token.type == TokenType.READ_CALL ||
+                token.type == TokenType.STRUCT_KW ||
+                token.type == TokenType.DECL_KW
             )
             {
                 var sentencia = Sentencia();
@@ -54,6 +57,8 @@ namespace Compiler
             }
         }
 
+        //sentencia -> print id
+        //          | 
         private StatementNode Sentencia()
         {
             if (token.type == TokenType.ID)
@@ -68,11 +73,81 @@ namespace Compiler
             {
                 return Leer();
             }
+            else if(token.type == TokenType.DECL_KW)
+            {
+                return Declarar();
+            }
             else
             {
                 throw new SyntaxErrorException("Sentencia expected on row " +
                     token.row + " and column " + token.column);
             }
+        }
+
+        private StatementNode Declarar()
+        {
+            if(token.type != TokenType.DECL_KW)
+            {
+                throw new SyntaxErrorException("decl keyword expected on row " + token.row + 
+                    " and column " + token.column);
+            }
+            GetNextToken();
+            if(
+                token.type != TokenType.ID && 
+                token.type != TokenType.BOOL_KW &&
+                token.type != TokenType.INT_KW
+              )
+            {
+                throw new SyntaxErrorException("type identifier expected on row " + token.row +
+                    " and column " + token.column);
+            }
+            var varType = new VarTypeNode(token.lexema);
+            GetNextToken();
+            if(token.type != TokenType.ID)
+            {
+                throw new SyntaxErrorException("identifier expected on row " + token.row +
+                    " and column " + token.column);
+            }
+            var varID = new  IDNode(token.lexema);
+            GetNextToken();
+            var rankSpecifier = OptionalRankSpecifier(new List<int>());
+            if(token.type != TokenType.END_STATEMENT)
+            {
+                throw new SyntaxErrorException("; expected on row " + token.row +
+                    " and column " + token.column);
+            }
+            GetNextToken();
+            return new DeclarationStatement(varType, varID, rankSpecifier);
+        }
+
+        private List<int> OptionalRankSpecifier(List<int> numberList)
+        {
+            if(token.type == TokenType.BRACKET_OPEN)
+            {
+                GetNextToken();
+                if(token.type != TokenType.LIT_INT)
+                {
+                    throw new SyntaxErrorException("int size expected on row " + token.row +
+                    " and column " + token.column);
+                }
+                numberList.Add(int.Parse(token.lexema));
+                GetNextToken();
+                if(token.type != TokenType.BRACKET_CLOSE)
+                {
+                    throw new SyntaxErrorException("] expected on row " + token.row +
+                    " and column " + token.column);
+                }
+                GetNextToken();
+                return OptionalRankSpecifier(numberList);
+            }else
+            {
+                return numberList;
+            }
+        }
+
+        private void GetNextToken()
+        {
+            token = lexer.GetNextToken();
         }
 
         private StatementNode Leer()

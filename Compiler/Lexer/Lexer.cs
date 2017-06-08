@@ -24,6 +24,11 @@ namespace Compiler
             reservedWordsDict["read"] = TokenType.READ_CALL;
             reservedWordsDict["true"] = TokenType.LIT_BOOL;
             reservedWordsDict["false"] = TokenType.LIT_BOOL;
+            reservedWordsDict["int"] = TokenType.INT_KW;
+            reservedWordsDict["bool"] = TokenType.BOOL_KW;
+            reservedWordsDict["struct"] = TokenType.STRUCT_KW;
+            reservedWordsDict["end"] = TokenType.END_KW;
+            reservedWordsDict["decl"] = TokenType.DECL_KW;
         }
 
         public Token GetNextToken()
@@ -180,6 +185,34 @@ namespace Compiler
 
                 return new Token(
                     TokenType.PAREN_OPEN,
+                    lexema,
+                    lexemaRow,
+                    lexemaColumn
+                    );
+            }
+            else if (currentSymbol.character == '[')
+            {
+                var lexema = currentSymbol.character.ToString();
+                var lexemaRow = currentSymbol.rowCount;
+                var lexemaColumn = currentSymbol.colCount;
+                currentSymbol = inputString.GetNextSymbol();
+
+                return new Token(
+                    TokenType.BRACKET_OPEN,
+                    lexema,
+                    lexemaRow,
+                    lexemaColumn
+                    );
+            }
+            else if (currentSymbol.character == ']')
+            {
+                var lexema = currentSymbol.character.ToString();
+                var lexemaRow = currentSymbol.rowCount;
+                var lexemaColumn = currentSymbol.colCount;
+                currentSymbol = inputString.GetNextSymbol();
+
+                return new Token(
+                    TokenType.BRACKET_CLOSE,
                     lexema,
                     lexemaRow,
                     lexemaColumn

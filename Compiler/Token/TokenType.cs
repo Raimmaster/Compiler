@@ -19,6 +19,13 @@
         OP_EXPONENT,
         TRUE_KW,
         FALSE_KW,
-        LIT_BOOL
+        LIT_BOOL,
+        INT_KW,
+        BOOL_KW,
+        STRUCT_KW,
+        END_KW,
+        BRACKET_OPEN,
+        BRACKET_CLOSE,
+        DECL_KW
     }
 }
