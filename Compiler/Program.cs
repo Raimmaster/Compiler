@@ -21,6 +21,10 @@ namespace Compiler
                 end
                 A = 10; 
                 B = false;
+                uno.x = 4;
+                uno.y = 15;
+                arr[0] = uno.x + uno.y;
+                arr[uno.x] = uno.y + 2;
             ";
             
             var inputString = new InputString(input);
