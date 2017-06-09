@@ -76,11 +76,51 @@ namespace Compiler
             else if(token.type == TokenType.DECL_KW)
             {
                 return Declarar();
+            }else if (token.type == TokenType.STRUCT_KW)
+            {
+                return StructDeclaration();
             }
             else
             {
                 throw new SyntaxErrorException("Sentencia expected on row " +
                     token.row + " and column " + token.column);
+            }
+        }
+
+        private StatementNode StructDeclaration()
+        {
+            if(token.type != TokenType.STRUCT_KW)
+            {
+                throw new SyntaxErrorException("struct keyword expected on row " +
+                    token.row + " and column " + token.column);
+            }
+            GetNextToken();
+            if(token.type != TokenType.ID)
+            {
+                throw new SyntaxErrorException("id expected on row " +
+                    token.row + " and column " + token.column);
+            }
+            var id = token;
+            GetNextToken();
+            var attributeList = StructAttributeList(new List<DeclarationStatement>());
+            if(token.type != TokenType.END_KW)
+            {
+                throw new SyntaxErrorException("end keyword expected on row " +
+                    token.row + " and column " + token.column);
+            }
+            GetNextToken();
+            return new StructNode(id, attributeList);
+        }
+
+        private List<DeclarationStatement> StructAttributeList(List<DeclarationStatement> declarations)
+        {
+            if(token.type == TokenType.DECL_KW)
+            {
+                declarations.Add((DeclarationStatement)Declarar());
+                return StructAttributeList(declarations);
+            }else
+            {
+                return declarations;
             }
         }
 

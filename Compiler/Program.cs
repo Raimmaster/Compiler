@@ -11,7 +11,16 @@ namespace Compiler
     {
         static void Main(string[] args)
         {   
-            var input = @"decl int A; decl bool B; decl int arr[10]; A = 10; B = false;
+            var input = @"decl int A; 
+                decl bool B; 
+                decl int arr[10]; 
+                struct uno
+                    decl int x;
+                    decl bool f;
+                    decl int y;
+                end
+                A = 10; 
+                B = false;
             ";
             
             var inputString = new InputString(input);
