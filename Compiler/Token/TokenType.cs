@@ -26,6 +26,7 @@
         END_KW,
         BRACKET_OPEN,
         BRACKET_CLOSE,
-        DECL_KW
+        DECL_KW,
+        DOT_OPERATOR
     }
 }

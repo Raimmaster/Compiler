@@ -1,14 +1,21 @@
 using System;
+using System.Collections.Generic;
 
 namespace Compiler
 {
     public class IDNode : ExpressionNode
     {
-        private string idLexema;
+        public string idLexema;
+        public List<AttributeNode> attributeList;
 
         public IDNode(string idLexema)
         {
             this.idLexema = idLexema;
+        }
+
+        public IDNode(string idLexema, List<AttributeNode> attributeList) : this(idLexema)
+        {
+            this.attributeList = attributeList;
         }
 
         public override dynamic Evaluate()

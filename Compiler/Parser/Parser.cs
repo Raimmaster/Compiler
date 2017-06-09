@@ -76,11 +76,51 @@ namespace Compiler
             else if(token.type == TokenType.DECL_KW)
             {
                 return Declarar();
+            }else if (token.type == TokenType.STRUCT_KW)
+            {
+                return StructDeclaration();
             }
             else
             {
                 throw new SyntaxErrorException("Sentencia expected on row " +
                     token.row + " and column " + token.column);
+            }
+        }
+
+        private StatementNode StructDeclaration()
+        {
+            if(token.type != TokenType.STRUCT_KW)
+            {
+                throw new SyntaxErrorException("struct keyword expected on row " +
+                    token.row + " and column " + token.column);
+            }
+            GetNextToken();
+            if(token.type != TokenType.ID)
+            {
+                throw new SyntaxErrorException("id expected on row " +
+                    token.row + " and column " + token.column);
+            }
+            var id = token;
+            GetNextToken();
+            var attributeList = StructAttributeList(new List<DeclarationStatement>());
+            if(token.type != TokenType.END_KW)
+            {
+                throw new SyntaxErrorException("end keyword expected on row " +
+                    token.row + " and column " + token.column);
+            }
+            GetNextToken();
+            return new StructNode(id, attributeList);
+        }
+
+        private List<DeclarationStatement> StructAttributeList(List<DeclarationStatement> declarations)
+        {
+            if(token.type == TokenType.DECL_KW)
+            {
+                declarations.Add((DeclarationStatement)Declarar());
+                return StructAttributeList(declarations);
+            }else
+            {
+                return declarations;
             }
         }
 
@@ -195,12 +235,7 @@ namespace Compiler
 
         private StatementNode Asignar()
         {   
-            if (token.type != TokenType.ID)
-            {
-                throw new SyntaxErrorException("ID Token Type expected!");
-            }
-            string idLexema = token.lexema;
-            token = lexer.GetNextToken();
+            var id = ID();
             if (token.type != TokenType.OP_ASSIGN)
             {
                 throw new SyntaxErrorException("= operand expected!");
@@ -213,7 +248,7 @@ namespace Compiler
                 throw new SyntaxErrorException("; operand expected");
             }
             token = lexer.GetNextToken();
-            return new AssignNode(new IDNode(idLexema), eValor);
+            return new AssignNode(id, eValor);
             //this.vars[idLexema] = eValor;
         }
 
@@ -304,15 +339,62 @@ namespace Compiler
                 return valor;
             }else if (token.type == TokenType.ID)
             {
-                string idLexema = token.lexema;
-                var valor = new IDNode(idLexema);
-                token = lexer.GetNextToken();
-
-                return valor;
+                return ID();
             }
             else
             {
                 throw new ParserException("Expected a factor.");
+            }
+        }
+
+        private IDNode ID()
+        {
+            if(token.type != TokenType.ID)
+            {
+                throw new SyntaxErrorException("id expected on row " + token.row
+                    + " and column " + token.column);
+            }
+            var id = token.lexema;
+            GetNextToken();
+            List<AttributeNode> attributeList = OptionalAttributeList();
+
+            return new IDNode(id, attributeList);
+        }
+
+        private List<AttributeNode> OptionalAttributeList()
+        {
+            if(token.type == TokenType.DOT_OPERATOR)
+            {
+                GetNextToken();
+                if(token.type != TokenType.ID)
+                {
+                    throw new SyntaxErrorException("id expected on row " + token.row
+                        + " and column " + token.column);
+                }
+                var id = token.lexema;
+                var attributeNode = new FieldNode(id);
+                GetNextToken();
+                var attributeList = OptionalAttributeList();
+                attributeList.Insert(0, attributeNode);
+                return attributeList;
+            }else if (token.type == TokenType.BRACKET_OPEN)
+            {
+                GetNextToken();
+                var value = E();
+                if(token.type != TokenType.BRACKET_CLOSE)
+                {
+                    throw new SyntaxErrorException("] expected on row " + token.row
+                        + " and column " + token.column);
+                }
+                GetNextToken();
+                var attributeList = OptionalAttributeList();
+                var indexArrayNode = new IndexArrayNode(value);
+                attributeList.Insert(0, indexArrayNode);
+                return attributeList;
+            }
+            else
+            {
+                return new List<AttributeNode>();
             }
         }
 
