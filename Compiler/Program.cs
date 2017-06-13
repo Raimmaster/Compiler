@@ -24,9 +24,10 @@ namespace Compiler
                 uno.x = 4;
                 uno.y = 15;
                 arr[0] = uno.x + uno.y;
-                arr[uno.x] = uno.y + 2;
+                arr[uno.x][2].z = uno.y + 2;
             ";
             
+            SymbolsTable.InitTypes();
             var inputString = new InputString(input);
             var lexer = new Lexer(inputString);
             

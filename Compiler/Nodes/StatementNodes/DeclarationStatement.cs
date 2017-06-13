@@ -23,7 +23,23 @@ namespace Compiler
 
         public override void ValidateSemantic()
         {
-            //throw new NotImplementedException();
+            var type = varType.GetVarType();
+            if(SymbolsTable.types.ContainsKey(varID.idLexema))
+            {
+                throw new SemanticException("id cannot be named as an existing type!");
+            }
+            int rankCount = rankSpecifier.Count;
+            if(rankCount > 0)
+            {
+                var arrType = new ArrayType(rankSpecifier[0]);
+                Types currType = arrType.nextType;
+                for(int i = 1; i < rankCount; ++i)
+                {
+                    currType = new ArrayType(rankSpecifier[i]);
+                    currType = currType.nextType;
+                }
+                currType = type;
+            }
         }
     }
 }
