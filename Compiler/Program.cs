@@ -13,9 +13,16 @@ namespace Compiler
         {   
             var input = @"
             decl int y[3];
-            decl int A[5][4];
-            decl bool B[2][4][3];
             decl int z;
+            struct fecha
+                decl int mes;
+                decl int dia;
+                decl int anio;
+            end
+
+            decl fecha x;
+            x.dia = z;
+            y[x.dia] = 10;
             ";
             
             SymbolsTable.InitTypes();

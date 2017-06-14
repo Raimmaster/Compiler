@@ -1,12 +1,29 @@
+using System;
+
 namespace Compiler
 {
     public class IndexArrayNode : AttributeNode
     {
-        private ExpressionNode value;
+        public ExpressionNode value;
 
         public IndexArrayNode(ExpressionNode value)
         {
             this.value = value;
+        }
+
+        public override Types EvaluateType(Types type)
+        {
+            if(!(type is ArrayType))
+            {
+                throw new SemanticException("Type must be an array!");
+            }
+            var arrType = (ArrayType)type;
+            var exprType = value.EvaluateType();
+            if(!(exprType is IntType))
+            {
+                throw new SemanticException("Type must be an int!");
+            }
+            return arrType.type;
         }
     }
 }

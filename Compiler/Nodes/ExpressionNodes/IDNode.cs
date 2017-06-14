@@ -25,12 +25,16 @@ namespace Compiler
 
         public override Types EvaluateType()
         {
-            if(SymbolsTable.vars.ContainsKey(idLexema))
+            if(!SymbolsTable.vars.ContainsKey(idLexema))
             {
-                return SymbolsTable.vars[idLexema];
+                throw new SemanticException("Variable does not exist!");
             }
-
-            throw new SemanticException("Variable does not exist!");
+            var type = SymbolsTable.vars[idLexema];
+            foreach(var attribute in attributeList)
+            {
+                type = attribute.EvaluateType(type);
+            }
+            return type;
         }
 
         public override string ToString()
