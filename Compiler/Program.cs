@@ -11,20 +11,11 @@ namespace Compiler
     {
         static void Main(string[] args)
         {   
-            var input = @"decl int A; 
-                decl bool B; 
-                decl int arr[10]; 
-                struct uno
-                    decl int x;
-                    decl bool f;
-                    decl int y;
-                end
-                A = 10; 
-                B = false;
-                uno.x = 4;
-                uno.y = 15;
-                arr[0] = uno.x + uno.y;
-                arr[uno.x][2].z = uno.y + 2;
+            var input = @"
+            decl int y[3];
+            decl int A[5][4];
+            decl bool B[2][4][3];
+            decl int z;
             ";
             
             SymbolsTable.InitTypes();
@@ -35,7 +26,7 @@ namespace Compiler
             var code = parser.Parse();
             foreach(var production in code)
             {
-                //production.ValidateSemantic();
+                production.ValidateSemantic();
             }
             Console.WriteLine("Validated!");
             System.Console.ReadKey();

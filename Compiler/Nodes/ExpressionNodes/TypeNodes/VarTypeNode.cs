@@ -1,6 +1,6 @@
 namespace Compiler
 {
-    public class VarTypeNode 
+    public class VarTypeNode : Types
     {
         private string lexema;
 

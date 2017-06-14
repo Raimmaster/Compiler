@@ -32,13 +32,18 @@ namespace Compiler
             if(rankCount > 0)
             {
                 var arrType = new ArrayType(rankSpecifier[0]);
-                Types currType = arrType.nextType;
+                ArrayType currType = arrType;
                 for(int i = 1; i < rankCount; ++i)
                 {
-                    currType = new ArrayType(rankSpecifier[i]);
-                    currType = currType.nextType;
+                    currType.type = new ArrayType(rankSpecifier[i]);
+                    currType = (ArrayType)currType.type;
                 }
-                currType = type;
+                currType.type = type;
+
+                SymbolsTable.vars[varID.idLexema] = arrType;
+            }else
+            {
+                SymbolsTable.vars[varID.idLexema] = type;
             }
         }
     }

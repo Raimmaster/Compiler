@@ -15,12 +15,6 @@ namespace Compiler
         public ArrayType(int v)
         {
             this.rankCount = v;
-        }
-
-        public ArrayType(int rankCount, Types arrayType)
-        {
-            this.rankCount = rankCount;
-            this.type = arrayType;
-        }
+        }        
     }
 }
