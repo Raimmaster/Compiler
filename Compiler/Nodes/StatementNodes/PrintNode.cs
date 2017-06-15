@@ -11,6 +11,13 @@ namespace Compiler
             this.eValor = eValor;
         }
 
+        public override string GenerateCode()
+        {
+            var code = "console.log(" + eValor.GenerateCode().Code + ");\n";
+
+            return code;
+        }
+
         public override void Interpret()
         {
             Console.Out.WriteLine("Valor: " + eValor.Evaluate());

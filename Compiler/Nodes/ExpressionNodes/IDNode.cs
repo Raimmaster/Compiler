@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Compiler
 {
@@ -35,6 +36,12 @@ namespace Compiler
                 type = attribute.EvaluateType(type);
             }
             return type;
+        }
+
+        public override ExpressionCode GenerateCode()
+        {
+            //var sb = new StringBuilder();
+            return new ExpressionCode(idLexema);
         }
 
         public override string ToString()

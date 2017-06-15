@@ -16,6 +16,30 @@ namespace Compiler
             this.rankSpecifier = rankSpecifier;
         }
 
+        public override string GenerateCode()
+        {
+            var code = new System.Text.StringBuilder("let " + varID.GenerateCode().Code);
+            if(rankSpecifier.Count > 0)
+            {
+                /*for(int i = 0; i < rankSpecifier.Count; ++i)
+                {
+                    code.Append("[]");
+                }
+                code.Append(" = new ");
+                code.Append(varType.typeName);
+                for(int i = 0; i < rankSpecifier.Count; ++i)
+                {
+                    code.Append('[');
+                    code.Append(rankSpecifier[i]);
+                    code.Append(']');
+                    //let a = new Type[1][3][4];
+                }*/
+            }
+            code.Append(";\n");
+
+            return code.ToString();
+        }
+
         public override void Interpret()
         {
             //throw new NotImplementedException();

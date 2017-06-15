@@ -2,7 +2,7 @@ namespace Compiler
 {
     public class VarTypeNode : Types
     {
-        private string lexema;
+        public string typeName;
 
         public VarTypeNode()
         {
@@ -11,14 +11,14 @@ namespace Compiler
 
         public VarTypeNode(string lexema)
         {
-            this.lexema = lexema;
+            this.typeName = lexema;
         }
 
         public Types GetVarType()
         {
-            if(SymbolsTable.types.ContainsKey(lexema))
+            if(SymbolsTable.types.ContainsKey(typeName))
             {
-                return SymbolsTable.types[lexema];
+                return SymbolsTable.types[typeName];
             }else
             {
                 throw new SemanticException("Type does not exist!");

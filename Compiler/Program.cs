@@ -12,17 +12,18 @@ namespace Compiler
         static void Main(string[] args)
         {   
             var input = @"
-            decl int y[3];
+            decl int y;
+            decl bool b;
+            y = 9;
             decl int z;
-            struct fecha
-                decl int mes;
-                decl int dia;
-                decl int anio;
-            end
+            z = (y + 5) * 9 - 3 / ( y + 4);
+            b = false;
+            decl bool m;
+            m = true;
+            print m;
+            print b;
+            read z;
 
-            decl fecha x;
-            x.dia = z;
-            y[x.dia] = 10;
             ";
             
             SymbolsTable.InitTypes();
@@ -33,7 +34,7 @@ namespace Compiler
             var code = parser.Parse();
             foreach(var production in code)
             {
-                production.ValidateSemantic();
+                Console.Write(production.GenerateCode());
             }
             Console.WriteLine("Validated!");
             System.Console.ReadKey();

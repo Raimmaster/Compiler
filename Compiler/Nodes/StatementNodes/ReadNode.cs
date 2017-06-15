@@ -10,6 +10,12 @@ namespace Compiler
             this.iDNode = iDNode;
         }
 
+        public override string GenerateCode()
+        {
+            var code = iDNode.idLexema + " = readlineSync.question(\"Insert value: \");\n";
+            return code;
+        }
+
         public override void Interpret()
         {
             VariablesSingleton.Variables[iDNode.ToString()] = float.Parse(Console.ReadLine());

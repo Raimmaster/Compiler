@@ -14,6 +14,11 @@ namespace Compiler
             this.attributeList = attributeList;
         }
 
+        public override string GenerateCode()
+        {
+            return "";
+        }
+
         public override void Interpret()
         {
             throw new NotImplementedException();
