@@ -12,10 +12,20 @@ namespace Compiler
         static void Main(string[] args)
         {   
             var input = @"
-            decl int y;
+            decl int y[3];
+            struct fecha
+                decl int mes;
+                decl int dia;
+                decl int anio;
+            end
+
+            decl int z;
+            decl fecha xzz;
+            xzz.dia = z;
+            y[xzz.dia] = 10;
+            
             decl bool b;
             y = 9;
-            decl int z;
             z = (y + 5) * 9 - 3 / ( y + 4);
             b = false;
             decl bool m;

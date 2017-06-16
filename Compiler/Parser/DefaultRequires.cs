@@ -6,7 +6,7 @@ namespace Compiler
     {
         public override string GenerateCode()
         {
-            var requires = @"let readlineSync = require('readline-sync');";
+            var requires = @"let readlineSync = require('readline-sync');\n";
             return requires;
         }
 

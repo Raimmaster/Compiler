@@ -12,6 +12,7 @@ namespace Compiler
         public IDNode(string idLexema)
         {
             this.idLexema = idLexema;
+            this.attributeList = new List<AttributeNode>();
         }
 
         public IDNode(string idLexema, List<AttributeNode> attributeList) : this(idLexema)
@@ -40,8 +41,13 @@ namespace Compiler
 
         public override ExpressionCode GenerateCode()
         {
-            //var sb = new StringBuilder();
-            return new ExpressionCode(idLexema);
+            var sb = new StringBuilder(idLexema);
+            foreach(var attrib in attributeList)
+            {
+                sb.Append('.' + attrib.GenerateCode().Code);
+            }
+            
+            return new ExpressionCode(sb.ToString());
         }
 
         public override string ToString()

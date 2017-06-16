@@ -25,5 +25,10 @@ namespace Compiler
             }
             return arrType.type;
         }
+
+        public override ExpressionCode GenerateCode()
+        {
+            return value.GenerateCode();
+        }
     }
 }

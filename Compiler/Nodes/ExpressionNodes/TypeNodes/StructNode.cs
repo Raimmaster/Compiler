@@ -16,7 +16,31 @@ namespace Compiler
 
         public override string GenerateCode()
         {
-            return "";
+            var structToClass = @"
+            class " + id.lexema + @"{
+                constructor(";
+            var sb = new System.Text.StringBuilder(structToClass);
+
+            foreach(var attrib in attributeList)
+            {
+                sb.Append(attrib.varID.idLexema + ',');
+            }
+
+            sb.Remove(sb.Length - 1, 1);
+            sb.Append(@"){
+                ");
+            
+            foreach(var attrib in attributeList)
+            {
+                var attribCode = attrib.varID.idLexema;
+                sb.Append("this." + attribCode + '=' + attribCode + ";\n");
+            }
+
+            sb.Append(@"
+                }
+            }
+            ");
+            return sb.ToString();
         }
 
         public override void Interpret()

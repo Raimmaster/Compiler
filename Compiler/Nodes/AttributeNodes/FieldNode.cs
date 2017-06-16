@@ -25,5 +25,10 @@ namespace Compiler
 
             return struc.attributes[id];
         }
+
+        public override ExpressionCode GenerateCode()
+        {
+            return new ExpressionCode(id);
+        }
     }
 }
