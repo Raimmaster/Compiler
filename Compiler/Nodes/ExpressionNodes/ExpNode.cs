@@ -18,5 +18,14 @@ namespace Compiler
 
             return resultado;
         }
+
+        public override ExpressionCode GenerateCode()
+        {
+            var leftCode = leftOperand.GenerateCode();
+            var rightCode = rightOperand.GenerateCode();
+            
+            var code = '(' + leftCode.Code + '^' + rightCode.Code + ')';
+            return new ExpressionCode(code);
+        }
     }
 }

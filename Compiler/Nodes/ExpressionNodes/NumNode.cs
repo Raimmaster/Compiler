@@ -20,5 +20,10 @@ namespace Compiler
         {
             return new IntType();
         }
+
+        public override ExpressionCode GenerateCode()
+        {
+            return new ExpressionCode(v.ToString());
+        }
     }
 }

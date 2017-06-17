@@ -4,5 +4,6 @@ namespace Compiler
     {
         public abstract void Interpret();
         public abstract void ValidateSemantic();
+        public abstract string GenerateCode();
     }
 }

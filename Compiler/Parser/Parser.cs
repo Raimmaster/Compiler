@@ -31,7 +31,9 @@ namespace Compiler
 
         private List<StatementNode> Codigo()
         {
-            return ListaSentencias();
+            var listaSentencias = ListaSentencias();
+            listaSentencias.Insert(0, new DefaultRequires());
+            return listaSentencias;
         }
 
         private List<StatementNode> ListaSentencias()

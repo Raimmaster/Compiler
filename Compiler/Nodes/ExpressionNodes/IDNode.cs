@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Compiler
 {
@@ -11,6 +12,7 @@ namespace Compiler
         public IDNode(string idLexema)
         {
             this.idLexema = idLexema;
+            this.attributeList = new List<AttributeNode>();
         }
 
         public IDNode(string idLexema, List<AttributeNode> attributeList) : this(idLexema)
@@ -25,12 +27,27 @@ namespace Compiler
 
         public override Types EvaluateType()
         {
-            if(SymbolsTable.vars.ContainsKey(idLexema))
+            if(!SymbolsTable.vars.ContainsKey(idLexema))
             {
-                return SymbolsTable.vars[idLexema];
+                throw new SemanticException("Variable does not exist!");
             }
+            var type = SymbolsTable.vars[idLexema];
+            foreach(var attribute in attributeList)
+            {
+                type = attribute.EvaluateType(type);
+            }
+            return type;
+        }
 
-            throw new SemanticException("Variable does not exist!");
+        public override ExpressionCode GenerateCode()
+        {
+            var sb = new StringBuilder(idLexema);
+            foreach(var attrib in attributeList)
+            {
+                sb.Append('.' + attrib.GenerateCode().Code);
+            }
+            
+            return new ExpressionCode(sb.ToString());
         }
 
         public override string ToString()

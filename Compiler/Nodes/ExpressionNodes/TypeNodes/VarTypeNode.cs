@@ -1,12 +1,28 @@
 namespace Compiler
 {
-    public class VarTypeNode 
+    public class VarTypeNode : Types
     {
-        private string lexema;
+        public string typeName;
+
+        public VarTypeNode()
+        {
+            
+        }
 
         public VarTypeNode(string lexema)
         {
-            this.lexema = lexema;
+            this.typeName = lexema;
+        }
+
+        public Types GetVarType()
+        {
+            if(SymbolsTable.types.ContainsKey(typeName))
+            {
+                return SymbolsTable.types[typeName];
+            }else
+            {
+                throw new SemanticException("Type does not exist!");
+            }
         }
     }
 }

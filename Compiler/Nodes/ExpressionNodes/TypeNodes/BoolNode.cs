@@ -20,5 +20,10 @@ namespace Compiler
         {
             return new BoolType();
         }
+
+        public override ExpressionCode GenerateCode()
+        {
+            return new ExpressionCode(v.ToString().ToLower());
+        }
     }
 }
